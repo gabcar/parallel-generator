@@ -1,6 +1,6 @@
 
 data:
-  path: '/mnt/Data/gabcar/visceral3/output/rbf_continuous_wb_sitk/'
+  path: 'example_data/'
   x_key: 'image'
   y_key: 'mask'
   n_workers: 6

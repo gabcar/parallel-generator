@@ -1,0 +1,30 @@
+
+data:
+  path: '/mnt/Data/gabcar/visceral3/output/rbf_continuous_wb_sitk/'
+  x_key: 'image'
+  y_key: 'mask'
+  n_workers: 6
+  buffer_size: 200 
+  n_folds: 5
+  fold_index: 0
+  classes:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7 
+  image_size: 256   
+  augmentations:
+      # random_brightness: .1
+      # random_contrast:
+      #  upper: 1.05
+      #  lower: .95
+     affine_transform:
+       rotation: 10
+       scaling: .1
+       translation: 0
+  axis: 0
+  n_samples: 10

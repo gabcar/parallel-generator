@@ -1,4 +1,11 @@
-"""volume_loader.py
+"""volume_to_slice_generator.py
+
+Loads and augments slices from volumes. Used for medical image segmentation.
+
+Extends ParallelGenerator
+
+
+Author: Gabriel Carrizo (gihub.com/gabcar)
 """
 import multiprocessing as mp
 import os
@@ -14,7 +21,7 @@ from utils.errors import FileFormatNotSupportedError
 
 class VolumeToSliceGenerator(ParallelGenerator):
 
-    def get_images(self, idx):
+    def get_datapoints(self, **kwargs):
         
         patient = np.random.choice(list(self.registry.keys()))
 
@@ -59,22 +66,10 @@ class VolumeToSliceGenerator(ParallelGenerator):
                 general_files = trim_file_keys(y_files, self.y_key)
                 self.registry[patient] = general_files
 
-    def push(self, buffer):
-        # We have to seed the differnt processes or else they 
-        # will draw identical samples
-        np.random.seed(os.getpid())
-        # We also initialize each process on different classes
-        idx = (os.getpid() % len(self.additional_params['classes']))
-
-        while True:
-            items = self.get_images(idx)
-            for item in items:
-                buffer.put(item)
-                # print("Process #{} successfully added item of class {} to buffer.".format(os.getpid(), idx))
-            idx = (idx + 1) % len(self.additional_params['classes'])
-        # print('Producer {} exiting'.format(os.getpid()))
-
     def parse_images(self, image, label, training=True):
+        """
+        Parses images
+        """
         image, label = self.resize_img_and_label(image, label, training)
 
         image = image / 500
@@ -130,7 +125,7 @@ class VolumeToSliceGenerator(ParallelGenerator):
             order = 3
 
         image_size = np.array([self.additional_params['image_size']] * 2)
-        factor = image.shape / image_size
+        factor = image_size / image.shape
         image = scipy.ndimage.zoom(image, zoom=factor, order=order)
 
         tmp = []

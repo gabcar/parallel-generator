@@ -1,4 +1,4 @@
-"""
+"""parallel_generator.py
 Parent class containing a skeleton of the required
 methods for the parallelization of creating, managing and
 populating the data buffer.
@@ -118,13 +118,13 @@ class ParallelGenerator:
         # on different classes if class balancing is desired.
 
         while True:
-            items = self.get_datapoint(seed=os.getpid())
+            items = self.get_datapoints(seed=os.getpid())
             for item in items:
                 buffer.put(item)
                 # print("Process #{} successfully added item of class {} to buffer.".format(os.getpid(), idx))
         # print('Producer {} exiting'.format(os.getpid()))
 
-    def get_datapoint(self, **kwargs):
+    def get_datapoints(self, **kwargs):
         """
         Method that from a seed loads a datapoint (x and y) and 
         places returns them in a list for pushing to the buffer.
